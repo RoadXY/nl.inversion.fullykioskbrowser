@@ -1,0 +1,11 @@
+{
+    "type": "boolean",
+    "title": { 
+        "en": "Is in screensaver" 
+    },
+    "uiComponent": "sensor",
+    "getable": true,
+    "setable": false,
+    "insights": false,
+    "icon": "/assets/images/screensaver.svg"
+  }

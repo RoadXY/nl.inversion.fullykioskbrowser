@@ -1,0 +1,12 @@
+{
+    "type": "number",
+    "title": { 
+        "en": "Battery temperature" 
+    },
+    "uiComponent": "sensor",
+    "getable": true,
+    "setable": false,
+    "units": { "en": "°C" },
+    "insights": true,
+    "icon": "/assets/images/temperature.svg"
+  }

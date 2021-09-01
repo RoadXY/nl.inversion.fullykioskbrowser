@@ -1,0 +1,12 @@
+{
+  "name": "nl.inversion.fullykioskbrowser",
+  "version": "1.0.0",
+  "main": "app.js",
+  "scripts": {
+    "build": "tsc"
+  },
+  "dependencies": {
+    "abort-controller": "^3.0.0",
+    "node-fetch": "^2.6.1"
+  }
+}

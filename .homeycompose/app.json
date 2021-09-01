@@ -1,0 +1,25 @@
+{
+  "id": "nl.inversion.fullykioskbrowser",
+  "version": "1.0.0",
+  "compatibility": ">=5.0.0",
+  "sdk": 3,
+  "name": {
+    "en": "Fully Kiosk Browser"
+  },
+  "description": {
+    "en": "Control your Fully Kiosk Browser on your Android tablet or phone from Homey."
+  },
+  "category": [
+    "tools"
+  ],
+  "permissions": [],
+  "images": {
+    "small": "/assets/images/small.png",
+    "large": "/assets/images/large.png",
+    "xlarge": "/assets/images/xlarge.png"
+  },
+  "author": {
+    "name": "Robin van Kekem",
+    "email": "roady1979@gmail.com"
+  }
+}

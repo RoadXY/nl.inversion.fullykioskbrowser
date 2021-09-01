@@ -1,0 +1,10 @@
+{
+    "type": "boolean",
+    "title": { 
+        "en": "Screen on" 
+    },
+    "uiComponent": "toggle",
+    "getable": true,
+    "setable": true,
+    "uiQuickAction": true
+  }

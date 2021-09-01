@@ -1,0 +1,42 @@
+<link href="../assets/css/styles.css" rel="stylesheet" type="text/css"/>
+<script>
+    Homey.setTitle( Homey.__('pair.api.title') );
+
+    const api_form = document.getElementById('api-form');
+    api_form.onsubmit = submit;
+
+    function submit(event) {
+
+        var data = {
+            'host': document.getElementById("host").value,
+            'port': document.getElementById("port").value,
+            'passwd': document.getElementById("passwd").value
+        };
+
+        Homey.emit('station-api', data).then(function (result) {
+
+        });
+    }
+
+</script>
+<div class="hy-tmpl-api-logo">
+    <img class="my-svg" src="../assets/svg/api.svg" alt="api">
+</div>
+<p data-i18n="pair.api.description" ></p>
+<form id="api-form" class="hy-tmpl-api-form" action="/" method="post">
+    <div class="hy-tmpl-api-row row">
+        <label class="hy-label hy-tmpl-api-label" for="host" data-i18n="pair.api.label_hostname" ></label>
+        <input class="hy-input-text" name="host" type="text" id="host" value="" placeholder="192.168.0.50" required>
+    </div>
+    <div class="hy-tmpl-api-row row">
+        <label class="hy-label hy-tmpl-api-label" for="port" data-i18n="pair.api.label_port"></label>
+        <input class="hy-input-text" name="port" type="number" id="port" value="" placeholder="2323" required>
+    </div>
+    <div class="hy-tmpl-api-row row">
+        <label class="hy-label hy-tmpl-api-label" for="passwd" data-i18n="pair.api.label_passwd"></label>
+        <input class="hy-input-text" name="passwd" type="password" id="passwd" value="" placeholder="Wachtwoord" required>
+    </div>
+    <div class="hy-tmpl-api-row row">
+        <input class="hy-button hy-button-primary hy-button-fill hy-tmpl-api-submit button" type="submit" data-i18n="pair.api.submit">
+    </div>
+</form>

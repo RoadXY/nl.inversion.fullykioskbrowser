@@ -1,0 +1,23 @@
+{
+    "pair": {
+        "api": {
+            "title": "Connect your Fully Kiosk Browser tablet or phone",
+            "description": "Please provide the IP adress and password for your device. Please see https://www.fully-kiosk.com/en/#remoteadmin for more details.",
+            "submit": "Login",
+            "label_hostname": "IP address",
+            "label_port": "Port",
+            "label_passwd": "Password"
+        }
+    },
+    "settings": {
+        "port_number_incorrect": "Port number should be between 1 and 65535",
+        "ip_address_incorrect": "Please enter an valid IP address"
+    },
+    "app": {
+        "error": {
+            "connection_failed": "Failed connecting to device: "
+            
+        },
+        "initializing": "Initializing device, please wait..."
+    }
+}

@@ -1,0 +1,13 @@
+{
+    "type": "number",
+    "title": { 
+        "en": "Screen brightness" 
+    },
+    "uiComponent": "slider",
+    "getable": true,
+    "setable": true,
+    "units": { "en": "nits" },
+    "min": 0,
+    "max": 10,
+    "step": 1
+  }

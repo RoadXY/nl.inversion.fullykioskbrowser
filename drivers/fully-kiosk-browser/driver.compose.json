@@ -1,0 +1,57 @@
+{
+  "name": {
+    "en": "Fully Kiosk Browser"
+  },
+  "class": "other",
+  "capabilities": [
+    "measure_battery",
+    "batteryTemperature",
+    "alarm_battery",
+    "screenOn",
+    "measure_pressure",
+    "screenBrightness",
+    "measure_luminance",
+    "hasLicense",
+    "isPlugged",
+    "isMobileDataEnabled",
+    "isInScreensaver",
+    "kioskLocked"
+  ],
+  "energy": {
+    "batteries": ["INTERNAL"]
+  },
+  "capabilitiesOptions": {
+    "button.toggleScreen": {
+      "title": {
+        "en": "Toggle screen"
+      },
+      "desc": {
+        "en": "Toggle the screen of the device on and off"
+      }
+    }
+  },
+  "images": {
+    "small": "{{driverAssetsPath}}/images/small.png",
+    "large": "{{driverAssetsPath}}/images/large.png",
+    "xlarge": "{{driverAssetsPath}}/images/xlarge.png"
+  },
+  "pair": [
+    {
+      "id": "api"
+    },
+    {
+      "id": "list_devices",
+      "template": "list_devices",
+      "navigation": {
+        "next": "add_devices"
+      },
+      "options": {
+        "singular": true
+      }
+    },
+    {
+      "id": "add_devices",
+      "template": "add_devices"
+    }
+  ]
+}

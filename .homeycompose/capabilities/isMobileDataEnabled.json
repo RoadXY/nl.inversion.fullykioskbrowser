@@ -1,0 +1,11 @@
+{
+    "type": "boolean",
+    "title": { 
+        "en": "Is mobile data enabled" 
+    },
+    "uiComponent": "sensor",
+    "getable": true,
+    "setable": false,
+    "insights": false,
+    "icon": "/assets/images/mobile-signal.svg"
+  }

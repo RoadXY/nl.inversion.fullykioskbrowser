@@ -1,0 +1,11 @@
+{
+    "type": "boolean",
+    "title": { 
+        "en": "Kiosk locked" 
+    },
+    "uiComponent": "sensor",
+    "getable": true,
+    "setable": false,
+    "insights": false,
+    "icon": "/assets/images/kioskLocked.svg"
+  }

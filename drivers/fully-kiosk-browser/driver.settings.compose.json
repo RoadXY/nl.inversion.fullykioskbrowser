@@ -1,0 +1,33 @@
+[
+  {
+    "id": "password",
+    "type": "password",
+    "label": { "en": "Password" },
+    "value": "Secret",
+    "hint": { "en": "The password of the Fully Kiosk Browser app" }
+  },
+  {
+    "id": "ip4",
+    "type": "text",
+    "label": { "en": "IP address" },
+    "value": "192.168.0.50",
+    "hint": { "en": "IP address of the device running Fully Kiosk Browser" }
+  },
+  {
+    "id": "port",
+    "type": "number",
+    "label": { "en": "Port" },
+    "value": 2323,
+    "min": 1,
+    "max": 65535
+  },
+  {
+    "id": "update_interval",
+    "type": "number",
+    "label": { "en": "Update interval" },
+    "value": 5,
+    "min": 1,
+    "max": 15,
+    "units": { "en": "minutes" }
+  }
+]
