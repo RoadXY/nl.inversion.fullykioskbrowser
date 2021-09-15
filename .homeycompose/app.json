@@ -9,6 +9,7 @@
   "description": {
     "en": "Control your Fully Kiosk Browser on your Android tablet or phone from Homey."
   },
+  "brandColor": "#1200F0",
   "category": [
     "tools"
   ],
@@ -21,5 +22,26 @@
   "author": {
     "name": "Robin van Kekem",
     "email": "roady1979@gmail.com"
-  }
+  },
+  "translators": [
+    {
+      "name": "🇬🇧 Robin van Kekem"
+    },
+    {
+      "name": "🇳🇱 Robin van Kekem"
+    }
+  ],
+  "contributing": {
+    "donate": {
+      "paypal": {
+        "username": "RvanKekem"
+      }
+    }
+  },
+  "bugs": {
+    "url": "https://github.com/RoadXY/nl.inversion.fullykioskbrowser/issues"
+  },
+  "source": "https://github.com/RoadXY/nl.inversion.fullykioskbrowser",
+  "homeyCommunityTopicId": 50986,
+  "support": "https://community.athom.com/t/app-flowchecker/50986"
 }

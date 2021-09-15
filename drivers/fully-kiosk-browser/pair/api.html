@@ -7,16 +7,42 @@
 
     function submit(event) {
 
+        // show loading overlay
+        Homey.showLoadingOverlay();
+
         var data = {
             'host': document.getElementById("host").value,
             'port': document.getElementById("port").value,
             'passwd': document.getElementById("passwd").value
         };
 
-        Homey.emit('station-api', data).then(function (result) {
+        Homey.emit('validate_device', data);
 
-        });
+        // Don't actually submit the form just yet
+        event.preventDefault();
     }
+
+    Homey.on('device-validate-ok', function( data ) {
+
+        let portInt = parseInt(data.port);
+        //console.log('station-api-ok:', data);
+        Homey.emit('save-data', { id: data.id, name: data.name, ip4: data.ip4, port: portInt, password: data.password, station: data.station }).then(function( result ){
+            
+            //console.log('save-data result:', result);
+            
+            if (result === true) {
+                // console.log('Done save data in driver.js, starting list_devices view');
+                Homey.showView('list_devices');
+            }
+            Homey.hideLoadingOverlay();
+        });
+    });
+
+    Homey.on('device-validate-error', function( message ){
+        console.log('station-api-error:', message)
+        Homey.hideLoadingOverlay();
+        Homey.alert( message, 'error' );
+    });
 
 </script>
 <div class="hy-tmpl-api-logo">

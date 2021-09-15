@@ -10,6 +10,7 @@
   "description": {
     "en": "Control your Fully Kiosk Browser on your Android tablet or phone from Homey."
   },
+  "brandColor": "#1200F0",
   "category": [
     "tools"
   ],
@@ -23,100 +24,289 @@
     "name": "Robin van Kekem",
     "email": "roady1979@gmail.com"
   },
+  "translators": [
+    {
+      "name": "🇬🇧 Robin van Kekem"
+    },
+    {
+      "name": "🇳🇱 Robin van Kekem"
+    }
+  ],
+  "contributing": {
+    "donate": {
+      "paypal": {
+        "username": "RvanKekem"
+      }
+    }
+  },
+  "bugs": {
+    "url": "https://github.com/RoadXY/nl.inversion.fullykioskbrowser/issues"
+  },
+  "source": "https://github.com/RoadXY/nl.inversion.fullykioskbrowser",
+  "homeyCommunityTopicId": 50986,
+  "support": "https://community.athom.com/t/app-flowchecker/50986",
   "flow": {
+    "triggers": [
+      {
+        "id": "isPlugged_true",
+        "title": {
+          "en": "Power adapter connected"
+        },
+        "hint": {
+          "en": "This card will be triggered when the device is plugged to an power adapter."
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=fully-kiosk-browser"
+          }
+        ]
+      },
+      {
+        "id": "isPlugged_false",
+        "title": {
+          "en": "Power adapter disconnected"
+        },
+        "hint": {
+          "en": "This card will be triggered when the device is unplugged from an power adapter."
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=fully-kiosk-browser"
+          }
+        ]
+      },
+      {
+        "id": "isMobileDataEnabled_true",
+        "title": {
+          "en": "Mobile data enabled"
+        },
+        "hint": {
+          "en": "This card will be triggered when mobile data is enabled."
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=fully-kiosk-browser"
+          }
+        ]
+      },
+      {
+        "id": "isMobileDataEnabled_false",
+        "title": {
+          "en": "Mobile data disabled"
+        },
+        "hint": {
+          "en": "This card will be triggered when mobile data is disabled."
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=fully-kiosk-browser"
+          }
+        ]
+      },
+      {
+        "id": "isInScreensaver_true",
+        "title": {
+          "en": "Changed to screensaver"
+        },
+        "hint": {
+          "en": "This card will be triggere when the device switched to screensaver."
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=fully-kiosk-browser"
+          }
+        ]
+      },
+      {
+        "id": "isInScreensaver_false",
+        "title": {
+          "en": "Went out of the screensaver"
+        },
+        "hint": {
+          "en": "This card will be triggered when the device went out of the screensaver."
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=fully-kiosk-browser"
+          }
+        ]
+      },
+      {
+        "id": "hasLicense_true",
+        "title": {
+          "en": "Received license"
+        },
+        "hint": {
+          "en": "This card will be triggered when the device received an license."
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=fully-kiosk-browser"
+          }
+        ]
+      },
+      {
+        "id": "hasLicense_false",
+        "title": {
+          "en": "Lost license"
+        },
+        "hint": {
+          "en": "This card will be triggered when the device lost the license."
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=fully-kiosk-browser"
+          }
+        ]
+      },
+      {
+        "id": "screenBrightness_changed",
+        "title": {
+          "en": "Brightness changed"
+        },
+        "hint": {
+          "en": "This card will be triggered when the brightness of the screen has changed."
+        },
+        "tokens": [
+          {
+            "name": "screenBrightness",
+            "type": "number",
+            "title": {
+              "en": "Screen brightness"
+            },
+            "units": {
+              "en": "%"
+            },
+            "example": 5
+          }
+        ],
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=fully-kiosk-browser"
+          }
+        ]
+      }
+    ],
+    "conditions": [
+      {
+        "id": "isInScreensaver",
+        "title": {
+          "en": "Screensaver is !{{running|not running}}"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=fully-kiosk-browser"
+          }
+        ]
+      },
+      {
+        "id": "isMobileDataEnabled",
+        "title": {
+          "en": "Mobile data is !{{enabled|not enabled}}"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=fully-kiosk-browser"
+          }
+        ]
+      },
+      {
+        "id": "isPlugged",
+        "title": {
+          "en": "Power is !{{plugged in|not plugged in}}"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=fully-kiosk-browser"
+          }
+        ]
+      },
+      {
+        "id": "kioskLocked",
+        "title": {
+          "en": "Device is !{{locked|not locked}} in kiosk mode"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=fully-kiosk-browser"
+          }
+        ]
+      },
+      {
+        "id": "screenOn",
+        "title": {
+          "en": "Screen is !{{on|off}}"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=fully-kiosk-browser"
+          }
+        ]
+      }
+    ],
     "actions": [
       {
+        "id": "force-sleep",
         "title": {
-          "en": "Set kiosk lock"
-        },
-        "titleFormatted": {
-          "en": "[[mode]] kiosk mode"
+          "en": "Force sleep"
         },
         "hint": {
-          "en": "This locks the device into kiosk mode. You'll need to set up an gesture or PIN on the device."
+          "en": "This will put the device to sleep."
         },
         "args": [
           {
-            "type": "dropdown",
-            "name": "mode",
-            "values": [
-              {
-                "id": "lock",
-                "label": {
-                  "en": "lock"
-                }
-              },
-              {
-                "id": "unlock",
-                "label": {
-                  "en": "unlock"
-                }
-              }
-            ]
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=fully-kiosk-browser"
           }
-        ],
-        "id": "set-kiosk-lock"
+        ]
       },
       {
+        "id": "restart-app",
         "title": {
-          "en": "Set maintenance lock"
-        },
-        "titleFormatted": {
-          "en": "[[mode]] maintenance mode"
+          "en": "Restart app"
         },
         "hint": {
-          "en": "This locks the device into maintenance mode. It is not possible to use the touchscreen until unlocked."
+          "en": "This will restart the Fully Kiosk Browser app on the device."
         },
         "args": [
           {
-            "type": "dropdown",
-            "name": "mode",
-            "values": [
-              {
-                "id": "lock",
-                "label": {
-                  "en": "lock"
-                }
-              },
-              {
-                "id": "unlock",
-                "label": {
-                  "en": "unlock"
-                }
-              }
-            ]
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=fully-kiosk-browser"
           }
-        ],
-        "id": "set-maintenance-lock"
+        ]
       },
       {
-        "title": {
-          "en": "Set screen brightness"
-        },
-        "titleFormatted": {
-          "en": "Set screen brightness to [[brightness]]"
-        },
-        "hint": {
-          "en": "This will set the screen brightness"
-        },
-        "args": [
-          {
-            "type": "range",
-            "name": "brightness",
-            "title": {
-              "en": "Brightness"
-            },
-            "min": 0,
-            "max": 250,
-            "step": 25,
-            "label": "%",
-            "labelMultiplier": 0.4,
-            "labelDecimals": 0
-          }
-        ],
-        "id": "set-screen-brightness"
-      },
-      {
+        "id": "set-screen-state",
         "title": {
           "en": "Set screen state",
           "nl": "Schermstatus instellen"
@@ -130,6 +320,11 @@
           "nl": "Dit zet het scherm aan of uit. Beweging- en geluidsdetectie (indien ingeschakeld) zal het scherm weer inschakelen."
         },
         "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=fully-kiosk-browser"
+          },
           {
             "type": "dropdown",
             "name": "onOff",
@@ -150,8 +345,113 @@
               }
             ]
           }
-        ],
-        "id": "set-screen-state"
+        ]
+      },
+      {
+        "id": "set-screen-brightness",
+        "title": {
+          "en": "Set screen brightness"
+        },
+        "titleFormatted": {
+          "en": "Set screen brightness to [[brightness]]"
+        },
+        "hint": {
+          "en": "This will set the screen brightness"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=fully-kiosk-browser"
+          },
+          {
+            "type": "range",
+            "name": "brightness",
+            "title": {
+              "en": "Brightness"
+            },
+            "min": 0,
+            "max": 250,
+            "step": 25,
+            "label": "%",
+            "labelMultiplier": 0.4,
+            "labelDecimals": 0
+          }
+        ]
+      },
+      {
+        "id": "set-maintenance-lock",
+        "title": {
+          "en": "Set maintenance lock"
+        },
+        "titleFormatted": {
+          "en": "[[mode]] maintenance mode"
+        },
+        "hint": {
+          "en": "This locks the device into maintenance mode. It is not possible to use the touchscreen until unlocked."
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=fully-kiosk-browser"
+          },
+          {
+            "type": "dropdown",
+            "name": "mode",
+            "values": [
+              {
+                "id": "lock",
+                "label": {
+                  "en": "lock"
+                }
+              },
+              {
+                "id": "unlock",
+                "label": {
+                  "en": "unlock"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "set-kiosk-lock",
+        "title": {
+          "en": "Set kiosk lock"
+        },
+        "titleFormatted": {
+          "en": "[[mode]] kiosk mode"
+        },
+        "hint": {
+          "en": "This locks the device into kiosk mode. You'll need to set up an gesture or PIN on the device."
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=fully-kiosk-browser"
+          },
+          {
+            "type": "dropdown",
+            "name": "mode",
+            "values": [
+              {
+                "id": "lock",
+                "label": {
+                  "en": "lock"
+                }
+              },
+              {
+                "id": "unlock",
+                "label": {
+                  "en": "unlock"
+                }
+              }
+            ]
+          }
+        ]
       }
     ]
   },
@@ -343,11 +643,11 @@
       "getable": true,
       "setable": true,
       "units": {
-        "en": "nits"
+        "en": "%"
       },
       "min": 0,
-      "max": 10,
-      "step": 1
+      "max": 100,
+      "step": 10
     },
     "screenOn": {
       "type": "boolean",

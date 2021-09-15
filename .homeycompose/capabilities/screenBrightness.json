@@ -6,8 +6,8 @@
     "uiComponent": "slider",
     "getable": true,
     "setable": true,
-    "units": { "en": "nits" },
+    "units": { "en": "%" },
     "min": 0,
-    "max": 10,
-    "step": 1
+    "max": 100,
+    "step": 10
   }

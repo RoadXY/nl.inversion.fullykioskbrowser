@@ -21,15 +21,14 @@ class MyDevice extends Device {
     await this.setInterval();
     await this.setCurrentState()
     .then(() => {
-      this.setAvailable()
-        .catch(this.error);
+      this.setAvailable().catch(this.error);
     })
     .catch(err => {
       this.log(err);
     });
 
     this.registerFlowListeners();
-    //this.getValues();
+    this.getValues();
 
   }
 
@@ -41,28 +40,27 @@ class MyDevice extends Device {
     this.log('get device details');
     this.settings = this.getSettings();
     this.station = this.getStoreValue('station');
-
-    this.log('Stored values:');
-    this.log('Settings', this.settings);
-    this.log('station', this.station);
   }
 
-  async donDeleted() {
+  async onDeleted() {
     this.log('Device is deleted');
-    this.homey.clearInterval(this.refreshInterval);
-
+    this.clearInterval();
   }
 
   async onSettings({ oldSettings, newSettings, changedKeys }) {
-    this.log('oldSettings:', oldSettings);
-    this.log('newSettings:', newSettings);
     this.log('changedKeys:', changedKeys);
 
-    if (changedKeys.includes('port') && (newSettings.port < 1 || newSettings.port > 65535)) {
-      this.log(newSettings.port + ' isn\'t a valid port');
-      throw new Error(this.homey.__('settings.port_number_incorrect'));
-    } else {
-      this.log('Port ' + newSettings.port + ' is valid');
+    if (changedKeys.includes('port')) {
+
+      if (newSettings.port < 1 || newSettings.port > 65535) {
+
+        this.log(newSettings.port + ' isn\'t a valid port');
+        throw new Error(this.homey.__('settings.port_number_incorrect'));
+
+      } else {
+        this.settings.port = newSettings.port;
+        this.log('Port ' + newSettings.port + ' is valid');
+      }
     }
 
     if (changedKeys.includes('ip4')) {
@@ -74,34 +72,45 @@ class MyDevice extends Device {
         this.log(newSettings.ip4 + ' is not an valid ip address');
         throw new Error(this.homey.__('settings.ip_address_incorrect'));
       } else {
-        this.log(newSettings.ip4 + ' is ip address');
+        this.settings.ip4 = newSettings.ip4;
+        this.log(newSettings.ip4 + ' is a ip address');
       }
     }
 
     if (changedKeys.includes('update_interval')){
-      this.homey.clearInterval(this.refreshInterval);
+      this.settings.update_interval = newSettings.update_interval;
+      this.clearInterval();
       this.setInterval();
     }
 
-    this.log('getting settings');
-    this.settings = this.getSettings();
-
+    if (changedKeys.includes('password')){
+      this.log('Changing password');
+      this.settings.password = newSettings.password;
+    }
   }
 
   async setCapabilityListeners() {
 
     this.registerCapabilityListener("screenOn", async (data) => {
       await this.setValue(
+        undefined,
         { action: (data ? "?cmd=screenOn&type=json" : "?cmd=screenOff&type=json"), value : false },
         true
       );
+      await this.getValues();
     });
 
     this.registerCapabilityListener("screenBrightness", async (data) => {
+      // Screen brightness of 0 won't change the brightness
+      // use a brightness of 1 instead (range is 1 to 255)
+      if (data == 0) data = 1;
+      
       await this.setValue(
-        { action: "?cmd=setStringSetting&type=json&key=screenBrightness&value", value: data * 25 },
+        undefined,
+        { action: "?cmd=setStringSetting&type=json&key=screenBrightness&value", value: data * 2.5 },
         true
       );
+      await this.getValues();
     });
 
   }
@@ -109,19 +118,22 @@ class MyDevice extends Device {
   async checkCapabilities() {
     this.log('check capabilities');
 
-    // Todo should fetch device info and update below capabilities
-
     if (this.station.sensorInfo !== undefined) {
 
       let sensor = {};
 
       for (var i = 0; i < this.station.sensorInfo.length; i++) { 
-        console.log(this.station.sensorInfo[i]);
         sensor = this.station.sensorInfo[i];
 
         if (sensor.type === 6) {
           if (this.hasCapability('measure_pressure') === false) {
             await this.addCapability('measure_pressure');
+          }
+        }
+
+        if (sensor.type === 5) {
+          if (this.hasCapability('measure_luminance') === false) {
+            await this.addCapability('measure_luminance');
           }
         }
 
@@ -133,9 +145,11 @@ class MyDevice extends Device {
       await this.removeCapability('measure_luminance').catch(this.error);
     }
 
+    /*
     if (this.hasCapability('kioskLocked') === false) {
       this.addCapability('kioskLocked');
     }
+    */
     
   }
 
@@ -152,8 +166,7 @@ class MyDevice extends Device {
     this.setCapabilityValue('batteryTemperature', this.station.batteryTemperature)
     .catch(this.error);
 
-    let license = stringToBoolean(this.station.isLicensed);
-    this.setCapabilityValue('hasLicense', license)
+    this.setCapabilityValue('hasLicense', this.station.isLicensed)
     .catch(this.error);
 
     this.setCapabilityValue('isInScreensaver', stringToBoolean(this.station.isInScreensaver))
@@ -165,8 +178,11 @@ class MyDevice extends Device {
     this.setCapabilityValue('kioskLocked', stringToBoolean(this.station.kioskLocked))
     .catch(this.error);
 
-    let screenBrightness = Math.round(this.station.screenBrightness/25.5);
-    screenBrightness = screenBrightness > 10 ? 10 : screenBrightness;
+    this.setCapabilityValue('isMobileDataEnabled', stringToBoolean(this.station.isMobileDataEnabled))
+    .catch(this.error);
+
+    let screenBrightness = convertBrightnessToHomeyValues(this.station.screenBrightness);
+    screenBrightness = screenBrightness > 100 ? 100 : screenBrightness;
     screenBrightness = screenBrightness < 0 ? 0 : screenBrightness;
     this.setCapabilityValue('screenBrightness', screenBrightness)
     .catch(this.error);
@@ -180,37 +196,64 @@ class MyDevice extends Device {
       
       let sensor = {};
       for (var i = 0; i < this.station.sensorInfo.length; i++) { 
-        console.log(this.station.sensorInfo[i]);
+        //console.log(this.station.sensorInfo[i]);
         sensor = this.station.sensorInfo[i];
   
         if (sensor.type === 6) {
           if (this.hasCapability('measure_pressure') === true) {
+            if (sensor.values !== undefined)
             await this.setCapabilityValue('measure_pressure', sensor.values[0])
             .catch(this.error);
+          } else {
+            this.log('Adding capability measure_pressure');
+            await this.addCapability('measure_pressure').then( 
+              this.setCapabilityValue('measure_pressure', sensor.values[0])
+            )
+          }
+        } 
+        
+        if (sensor.type === 5) {
+          if (this.hasCapability('measure_luminance') === true) {
+            if (sensor.values !== undefined)
+            await this.setCapabilityValue('measure_luminance', sensor.values[0])
+            .catch(this.error);
+          } else {
+            this.log('Adding capability measure_luminance');
+            await this.addCapability('measure_luminance').then( 
+              this.setCapabilityValue('measure_luminance', sensor.values[0])
+            )
           }
         }
+
       }
     } else {
       this.log('This devices doesn\'t have any sensors');
     }
-
   }
 
-  async setValue(data, fromInterface) {
+  async setValue(device, data, fromInterface) {
 
-    this.log('action:', data.action);
-    this.log('setValue:', data.value);
+    let ip4, port, password;
 
-    let url = '';
-    if (data.value || data.value === 0) {
-      this.log('has value');
-      url = `http://${this.settings.ip4}:${this.settings.port}/${data.action}=${data.value}&password=${this.settings.password}`;
+
+    if (device !== undefined) {
+      let deviceSettings = device.getSettings();
+      this.log('deviceSettings', deviceSettings);
+
+      ip4 = deviceSettings.ip4;
+      port = deviceSettings.port;
+      password = deviceSettings.password;
     } else {
-      this.log('no value');
-      url = `http://${this.settings.ip4}:${this.settings.port}/${data.action}&password=${this.settings.password}`;
+      ip4 = this.settings.ip4;
+      port = this.settings.port;
+      password = this.settings.password;
     }
 
-    this.log (url);
+    let url = '';
+    if (data.value || data.value === 0) url = `http://${ip4}:${port}/${data.action}=${data.value}&password=${password}`;
+    else url = `http://${ip4}:${port}/${data.action}&password=${password}`;
+
+    this.log(removePasswordFromUrl(url));
 
     const controller = new AbortController();
     const timeout = setTimeout(() => {
@@ -233,8 +276,6 @@ class MyDevice extends Device {
         this.handleConnectionError(error, fromInterface);
         return;
       });
-
-      this.log('response:', response);
 
       if (response == undefined) {
 
@@ -261,7 +302,7 @@ class MyDevice extends Device {
   async getValues() {
 
     const url = `http://${this.settings.ip4}:${this.settings.port}/?cmd=deviceInfo&type=json&password=${this.settings.password}`;
-    this.log (url);
+    this.log(removePasswordFromUrl(url));
 
     const controller = new AbortController();
     const timeout = setTimeout(() => {
@@ -277,20 +318,19 @@ class MyDevice extends Device {
         signal: controller.signal,
       }).then(res => {
         return res.json();
-      }).then(json => {
+      }).then(json => {``
         return json;
       }).catch(error => {
-        this.log('Error while getting values:', error);
         this.handleConnectionError(error, false);
       });
-
-      this.log('response:', response);
 
       if (response !== undefined && response.deviceName !== undefined) {
         // result ok
         this.station = response;
-        this.setCurrentState();
+
+        this.setAvailable().catch(this.error);
         this.setStoreValue('station', response);
+        this.setCurrentState();
         
       } else if (response !== undefined) {
         // result not ok
@@ -313,21 +353,40 @@ class MyDevice extends Device {
     if (error.code === 'ECONNREFUSED') {
       this.log('Connection refused');
       this.setUnavailable().catch(this.error);
-      if (fromInterface) {
-        throw new Error(this.homey__('app.error.connection_failed') + error.message);
-      }
+    } else if (error.code === 'EHOSTUNREACH') {
+      this.log('Host unreachable');
+      this.setUnavailable().catch(this.error);
+    } else {
+      this.log('Error while getting values:', error);
+    }
+
+    if (fromInterface) {
+      this.log('Sende error message to interface');
+      throw new Error(this.homey.__('app.error.connection_failed') + error.message);
     }
   }
   
   async setInterval() {
+    this.log('Set interval to ' + this.settings.update_interval + ' minutes');
     this.refreshInterval = this.homey.setInterval(this.getValues.bind(this), this.settings.update_interval * 1000 * 60);
+  }
+
+  async clearInterval() {
+    this.log('Clearing interval');
+    this.homey.clearInterval(this.refreshInterval);
   }
 
   async registerFlowListeners() {
 
+    this.homey.flow.getConditionCard('isInScreensaver').registerRunListener(async (args, state) => {
+      this.log('condition card \'isInScreensaver\' args:', args);
+      this.log('condition card \'isInScreensaver\' state:', state);
+      return stringToBoolean(this.station.isInScreensaver);
+    });
+
     this.homey.flow.getActionCard('set-screen-state').registerRunListener(async args => {
-      //  { onOff: 'on' }
       await this.setValue(
+        args.device,
         { action: (args.onOff === "on" ? "?cmd=screenOn&type=json" : "?cmd=screenOff&type=json"), value : false }, 
         true
       );
@@ -335,8 +394,10 @@ class MyDevice extends Device {
     });
 
     this.homey.flow.getActionCard('set-screen-brightness').registerRunListener(async args => {
-      //  { brightness: 250 } p.s. range 0 - 250
+      // { brightness: 250 } 
+      // Range 0 - 250
       await this.setValue(
+        args.device,
         { action: "?cmd=setStringSetting&type=json&key=screenBrightness&value", value: args.brightness },
         true
       );
@@ -344,9 +405,9 @@ class MyDevice extends Device {
     });
 
     this.homey.flow.getActionCard('set-kiosk-lock').registerRunListener(async args => {
-      this.log(args);
       //  { mode: 'unlock' }
       await this.setValue(
+        args.device,
         { action: (args.mode === "lock" ? "?cmd=lockKiosk&type=json" : "?cmd=unlockKiosk&type=json"), value : false },
         true
       );
@@ -354,10 +415,31 @@ class MyDevice extends Device {
     });
 
     this.homey.flow.getActionCard('set-maintenance-lock').registerRunListener(async args => {
+      await this.setValue(
+        args.device,
+        { action: (args.mode === "lock" ? "?cmd=enableLockedMode&type=json" : "?cmd=disableLockedMode&type=json"), value : false },
+        true
+      );
+      return true;
+    });
+
+    this.homey.flow.getActionCard('restart-app').registerRunListener(async args => {
       this.log(args);
       //  { mode: 'unlock' }
       await this.setValue(
-        { action: (args.mode === "lock" ? "?cmd=enableLockedMode&type=json" : "?cmd=disableLockedMode&type=json"), value : false },
+        args.device,
+        { action: '?cmd=restartApp&type=json', value : false },
+        true
+      );
+      return true;
+    });
+
+    this.homey.flow.getActionCard('force-sleep').registerRunListener(async args => {
+      this.log(args);
+      //  { mode: 'unlock' }
+      await this.setValue(
+        args.device,
+        { action: '?cmd=forceSleep&type=json', value : false },
         true
       );
       return true;
@@ -378,6 +460,18 @@ class MyDevice extends Device {
 function stringToBoolean(string) {
   if (string == "true" || string == 1 ) return true;
   if (string == "false" || string == 0 || string === undefined) return false;
+}
+
+function convertBrightnessToHomeyValues(value) {
+  return Math.round(value / 25) * 10
+}
+
+function removePasswordFromUrl(url) {
+
+  let chunks = url.split('&');
+  let password = chunks[chunks.length -1 ];
+  return url.replace(password, '') + 'password=[hidden]';
+
 }
 
 module.exports = MyDevice;

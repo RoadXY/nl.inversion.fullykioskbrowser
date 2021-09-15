@@ -1,0 +1,252 @@
+{   
+  "triggers": [
+    {"id": "isPlugged_true",
+      "title": {
+          "en": "Power adapter connected"
+        },
+        "hint": {
+          "en": "This card will be triggered when the device is plugged to an power adapter."
+        }
+    },
+    {"id": "isPlugged_false",
+      "title": {
+          "en": "Power adapter disconnected"
+        },
+        "hint": {
+          "en": "This card will be triggered when the device is unplugged from an power adapter."
+        }
+    },
+    {"id": "isMobileDataEnabled_true",
+      "title": {
+          "en": "Mobile data enabled"
+        },
+        "hint": {
+          "en": "This card will be triggered when mobile data is enabled."
+        }
+    },
+    {"id": "isMobileDataEnabled_false",
+      "title": {
+          "en": "Mobile data disabled"
+        },
+        "hint": {
+          "en": "This card will be triggered when mobile data is disabled."
+        }
+    },
+    {"id": "isInScreensaver_true",
+      "title": {
+          "en": "Changed to screensaver"
+        },
+        "hint": {
+          "en": "This card will be triggere when the device switched to screensaver."
+        }
+    },
+    {"id": "isInScreensaver_false",
+      "title": {
+          "en": "Went out of the screensaver"
+        },
+        "hint": {
+          "en": "This card will be triggered when the device went out of the screensaver."
+        }
+    },
+    {"id": "hasLicense_true",
+      "title": {
+          "en": "Received license"
+        },
+        "hint": {
+          "en": "This card will be triggered when the device received an license."
+        }
+    },
+    {"id": "hasLicense_false",
+      "title": {
+          "en": "Lost license"
+        },
+        "hint": {
+          "en": "This card will be triggered when the device lost the license."
+        }
+    },
+    {"id": "screenBrightness_changed",
+      "title": {
+          "en": "Brightness changed"
+        },
+        "hint": {
+          "en": "This card will be triggered when the brightness of the screen has changed."
+        },  
+        "tokens": [
+          {
+            "name": "screenBrightness",
+            "type": "number",
+            "title": { "en": "Screen brightness" },
+            "units": { "en": "%" },
+            "example": 5
+          }
+        ]
+    }
+  ],
+  "conditions": [
+    {"id": "isInScreensaver",
+      "title": {
+        "en": "Screensaver is !{{running|not running}}"
+      }
+    },
+    {"id": "isMobileDataEnabled",
+      "title": {
+        "en": "Mobile data is !{{enabled|not enabled}}"
+      }
+    },
+    {"id": "isPlugged",
+      "title": {
+        "en": "Power is !{{plugged in|not plugged in}}"
+      }
+    },
+    {"id": "kioskLocked",
+      "title": {
+        "en": "Device is !{{locked|not locked}} in kiosk mode"
+      }
+    },
+    {"id": "screenOn",
+      "title": {
+        "en": "Screen is !{{on|off}}"
+      }
+    }
+  ],
+  "actions": [
+    {"id": "force-sleep",
+      "title": {
+          "en": "Force sleep"
+        },
+        "hint": {
+          "en": "This will put the device to sleep."
+        }
+    },
+    {"id": "restart-app",
+      "title": {
+          "en": "Restart app"
+        },
+        "hint": {
+          "en": "This will restart the Fully Kiosk Browser app on the device."
+        }
+    },
+    {"id": "set-screen-state",
+      "title": {
+          "en": "Set screen state",
+          "nl": "Schermstatus instellen"
+        },
+        "titleFormatted": {
+          "en": "Set the screen [[onOff]]",
+          "nl": "Zet het scherm [[onOff]]"
+        },
+        "hint": {
+          "en": "This will set the screen to on or off. Motion and sound detection (if enabled) will turn the screen back on again.",
+          "nl": "Dit zet het scherm aan of uit. Beweging- en geluidsdetectie (indien ingeschakeld) zal het scherm weer inschakelen."
+        },
+        "args": [
+          {
+            "type": "dropdown",
+            "name": "onOff",
+            "values": [
+              {
+                "id": "on",
+                "label": {
+                  "en": "on",
+                  "nl": "aan"
+                }
+              },
+              {
+                "id": "off",
+                "label": {
+                  "en": "off",
+                  "nl": "uit"
+                }
+              }
+            ]
+          }
+        ]
+    },
+    { "id": "set-screen-brightness",
+      "title": {
+        "en": "Set screen brightness"
+      },
+      "titleFormatted": {
+        "en": "Set screen brightness to [[brightness]]"
+      },
+      "hint": {
+        "en": "This will set the screen brightness"
+      },
+      "args": [
+        {
+          "type": "range",
+          "name": "brightness",
+          "title": { "en": "Brightness" },
+          "min": 0,
+          "max": 250,
+          "step": 25,
+          "label": "%",
+          "labelMultiplier": 0.4,
+          "labelDecimals": 0
+        }
+      ]
+    },
+    { "id": "set-maintenance-lock",
+      "title": {
+        "en": "Set maintenance lock"
+      },
+      "titleFormatted": {
+        "en": "[[mode]] maintenance mode"
+      },
+      "hint": {
+        "en": "This locks the device into maintenance mode. It is not possible to use the touchscreen until unlocked."
+      },
+      "args": [
+        {
+          "type": "dropdown",
+          "name": "mode",
+          "values": [
+            {
+              "id": "lock",
+              "label": {
+                "en": "lock"
+              }
+            },
+            {
+              "id": "unlock",
+              "label": {
+                "en": "unlock"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    { "id": "set-kiosk-lock",
+      "title": {
+        "en": "Set kiosk lock"
+      },
+      "titleFormatted": {
+        "en": "[[mode]] kiosk mode"
+      },
+      "hint": {
+        "en": "This locks the device into kiosk mode. You'll need to set up an gesture or PIN on the device."
+      },
+      "args": [
+        {
+          "type": "dropdown",
+          "name": "mode",
+          "values": [
+            {
+              "id": "lock",
+              "label": {
+                "en": "lock"
+              }
+            },
+            {
+              "id": "unlock",
+              "label": {
+                "en": "unlock"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+  }

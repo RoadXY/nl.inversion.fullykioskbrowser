@@ -6,7 +6,11 @@
             "submit": "Login",
             "label_hostname": "IP address",
             "label_port": "Port",
-            "label_passwd": "Password"
+            "label_passwd": "Password",
+            "connection_failed": "Failed connecting to device: ",
+            "connection_timeout": "Time out while connecting to device",
+            "connection_refused": "Connection refused by remote host",
+            "connection_invalid_credentials": "Invalid password"
         }
     },
     "settings": {
