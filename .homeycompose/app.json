@@ -7,7 +7,7 @@
     "en": "Fully Kiosk Browser"
   },
   "description": {
-    "en": "Control your Fully Kiosk Browser on your Android tablet or phone from Homey."
+    "en": "Lockdown your websites and apps to secure and flexible interactive kiosk mode on your tablet or phone running Android."
   },
   "brandColor": "#1200F0",
   "category": [
@@ -16,8 +16,7 @@
   "permissions": [],
   "images": {
     "small": "/assets/images/small.png",
-    "large": "/assets/images/large.png",
-    "xlarge": "/assets/images/xlarge.png"
+    "large": "/assets/images/large.png"
   },
   "author": {
     "name": "Robin van Kekem",

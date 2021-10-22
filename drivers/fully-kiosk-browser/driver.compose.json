@@ -2,6 +2,7 @@
   "name": {
     "en": "Fully Kiosk Browser"
   },
+  "icon": "{{driverAssetsPath}}/icon.svg",
   "class": "other",
   "capabilities": [
     "measure_battery",
@@ -32,8 +33,7 @@
   },
   "images": {
     "small": "{{driverAssetsPath}}/images/small.png",
-    "large": "{{driverAssetsPath}}/images/large.png",
-    "xlarge": "{{driverAssetsPath}}/images/xlarge.png"
+    "large": "{{driverAssetsPath}}/images/large.png"
   },
   "pair": [
     {
